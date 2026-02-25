@@ -1,4 +1,4 @@
-# CVA – Crypt Variant Authority
+# CVA – Crypto Variant Authority
 
 A cryptocurrency transaction tracing project designed to analyze and trace the end receiver of crypto transactions using blockchain data.
 The project focuses on improving transaction visibility, attribution accuracy, and investigative reporting.
