@@ -13,6 +13,16 @@ Designed for investigative and analytical use cases
 
 Modular structure for future expansion
 
+Support for multiple cryptocurrencies
+
+Improved tracing accuracy using heuristics
+
+Export investigation results to: 
+
+Excel (.xls/.xlsx)
+PDF reports
+
+
 # Use Cases
 
 Blockchain forensics
@@ -25,17 +35,7 @@ Cryptocurrency transaction monitoring
 
 # Future Scope
 
-Support for multiple cryptocurrencies
-
-Improved tracing accuracy using heuristics
-
 Address clustering techniques
-
-Export investigation results to:
-
-Excel (.xls/.xlsx)
-
-PDF reports
 
 Visual transaction flow graphs
 
