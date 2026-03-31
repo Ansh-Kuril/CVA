@@ -1,0 +1,89 @@
+import { useState } from "react";
+import axios from "axios";
+
+export default function WalletTracker() {
+  const [wallet, setWallet] = useState("");
+  const [transactions, setTransactions] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [network, setNetwork] = useState("ethereum");
+
+  const ETHERSCAN_API_KEY = "F32EM2DUC7VEDQNUEIY39AGTBTCPV5QX3G";
+  const SOLANA_API_KEY = "76e3bac5-1874-4b62-a7c5-6cc53c3bca19";
+
+  const fetchTransactions = async () => {
+    if (!wallet) return;
+    setLoading(true);
+    try {
+      let response;
+      if (network === "ethereum") {
+        response = await axios.get(
+          `https://api.etherscan.io/api?module=account&action=txlist&address=${wallet}&apikey=${ETHERSCAN_API_KEY}`
+        );
+      } else if (network === "solana") {
+        response = await axios.get(
+          `https://mainnet.helius-rpc.com/v0/addresses/${wallet}/transactions?api-key=${SOLANA_API_KEY}`
+        );
+      }
+      setTransactions(response.data.result || response.data);
+    } catch (error) {
+      console.error("Error fetching transactions", error);
+    }
+    setLoading(false);
+  };
+
+  return (
+    <div className="min-h-screen flex flex-col items-center p-6 bg-gray-100">
+      <h1 className="text-2xl font-bold mb-4">Crypto Wallet Tracker</h1>
+      <div className="flex gap-2 mb-4">
+        <input
+          type="text"
+          placeholder="Enter Wallet Address"
+          value={wallet}
+          onChange={(e) => setWallet(e.target.value)}
+          className="border p-2 rounded-lg w-80"
+        />
+        <select
+          value={network}
+          onChange={(e) => setNetwork(e.target.value)}
+          className="border p-2 rounded-lg"
+        >
+          <option value="ethereum">Ethereum</option>
+          <option value="solana">Solana</option>
+        </select>
+        <button
+          onClick={fetchTransactions}
+          className="bg-blue-500 text-white p-2 rounded-lg"
+        >
+          Search
+        </button>
+      </div>
+      {loading && <p>Loading transactions...</p>}
+      <div className="w-full max-w-4xl bg-white shadow-md p-4 rounded-lg">
+        {transactions.length > 0 ? (
+          <ul className="list-disc pl-5">
+            {transactions.map((tx, index) => (
+              <li key={index} className="mb-2">
+                <strong>Transaction Hash:</strong>
+                <a
+                  href={network === "ethereum" ? `https://etherscan.io/tx/${tx.hash}` : `https://solscan.io/tx/${tx.signature}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-500"
+                >
+                  {tx.hash?.substring(0, 10) || tx.signature?.substring(0, 10)}...
+                </a>
+                <ul className="ml-5 list-circle">
+                  <li><strong>From:</strong> {tx.from || tx.accountData?.[0]?.account}</li>
+                  <li><strong>To:</strong> {tx.to || tx.accountData?.[1]?.account}</li>
+                  <li><strong>Value:</strong> {(tx.value ? (tx.value / 10 ** 18).toFixed(6) : "N/A")} ETH/SOL</li>
+                </ul>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p>No transactions found</p>
+        )}
+      </div>
+    </div>
+  );
+}
