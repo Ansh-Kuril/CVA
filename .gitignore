@@ -1,0 +1,8 @@
+node_modules/
+dist/
+.cache/
+*.zip
+vesion control
+.env
+.env.local
+.env.*.local

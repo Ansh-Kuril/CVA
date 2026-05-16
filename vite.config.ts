@@ -8,11 +8,13 @@ import glsl from "vite-plugin-glsl";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
+const isReplit = !!process.env.REPL_ID;
+
 export default defineConfig({
   plugins: [
     react(),
-    runtimeErrorOverlay(),
-    glsl(), // Add GLSL shader support
+    ...(isReplit ? [runtimeErrorOverlay()] : []),
+    glsl(),
   ],
   resolve: {
     alias: {
@@ -25,6 +27,5 @@ export default defineConfig({
     outDir: path.resolve(__dirname, "dist/public"),
     emptyOutDir: true,
   },
-  // Add support for large models and audio files
   assetsInclude: ["**/*.gltf", "**/*.glb", "**/*.mp3", "**/*.ogg", "**/*.wav"],
 });
